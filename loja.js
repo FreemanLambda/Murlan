@@ -25,7 +25,10 @@ function s_fillo_lojen(nr_lojtare) {
 	gjendja = new krijo_gjendje(ndihmesi.percaktoRadhen(), nr_lojtare, 0, 0, 0, true, null);
 	gjendja.fusha = new dore(1, null, 0, null, -1);
 	ndihmesi.shperndajLetrat(ljt, pako, gjendja);
+	exports.gjendja = gjendja;
 }
+
+function pranohetDora(dora, fusha) { return ndihmesi.pranohetDora(dora, fusha); }
 
 exports.MAX_USER = MAX_USER;
 exports.ljt = ljt;
@@ -35,5 +38,6 @@ exports.shkaterro_lojtar = shkaterro_lojtar;
 exports.pako = pako;
 exports.leter = leter;
 exports.dore = dore;
-exports.gjendja = gjendja;
 exports.s_fillo_lojen = s_fillo_lojen;
+exports.pranohetDora = pranohetDora;
+//exports.gjendja = gjendja;

@@ -17,6 +17,7 @@ function randPlote(kufi) {return Math.floor(Math.random()*kufi);}
 function renditLetratLojtar(lojtar) { // bubblesort
 	var i,j,prk;
 	nr_letra = lojtar.letrat.length;
+	lojtar.nr_letra = nr_letra;
 	for(i=0;i<nr_letra-1;i++) {
 		for(j=0;j<nr_letra-1-i;j++) {
 			if(lojtar.letrat[j].vlera > lojtar.letrat[j+1].vlera) { // shkembe
@@ -74,5 +75,10 @@ function shperndajLetrat(ljt, pako, gjendja) { // argumentet vjen me reference, 
 	for(var i=0;i<loja.MAX_USER;i++) if(ljt[i]) renditLetratLojtar(ljt[i]);
 }
 
+function pranohetDora(dora, fusha) {
+	return true;
+}
+
 exports.percaktoRadhen = percaktoRadhen;
 exports.shperndajLetrat = shperndajLetrat;
+exports.pranohetDora = pranohetDora;
