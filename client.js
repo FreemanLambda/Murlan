@@ -43,13 +43,28 @@ function lidhu(name) {
 		gjendja.fusha.letrat = $.parseJSON(data.letrat_fushe);
 		logo(dritarja, null, 'Radhen per te luajtur e ka ' + ljt[gjendja.radha].emri);
 		if(gjendja.radha === poz) {
-			if(gjendja.fusha.perparesia===-1) logo(konsol, null, 'Jeni i lire te hidhni cfare te deshironi!');
+			if(gjendja.fusha.perparesia===-2) logo(konsol, null, 'Jeni i lire te hidhni cfare te deshironi!'); // -2 duhet bere -1
 			else {
 				var msg_letrat = 'Letrat ne fushe jane: ';
-				for(var i=0;i<gjendja.fusha.nr_letra;i++) msg_letra += ((i+1) + '. ' + gjendja.fusha.letrat[i].kodi + ', ');
+				for(var i=0;i<gjendja.fusha.nr_letra;i++) if(gjendja.fusha.letrat[i]) 
+					msg_letrat += (gjendja.fusha.letrat[i].kodi + ', ');
 				msg_letrat += ('hedhur nga ' + gjendja.fusha.hedhesi.emri);
+				logo(dritarja, null, msg_letrat);
 			}
 		}
+	});
+	socket.on('pranohet', function(data) {
+		if(data.pas) logo(dritarja, null, ljt[gjendja.radha].emri + ' beri pas.');
+		else logo(dritarja, null, ljt[gjendja.radha].emri + ' hodhi letra ne fushe.');
+	});
+	socket.on('nuk pranohet', function(data) {
+		logo(konsol, null, data.mesazhi);
+	});
+	socket.on('doli lojtar', function(data) {
+		logo(dritarja, null, data.mesazhi);
+	});
+	socket.on('fund round', function(data) {
+		logo(dritarja, null, data.mesazhi);
 	});
 }
 
@@ -63,7 +78,6 @@ $(document).ready(function() {
 	});
 	
 	$('#hidh').click(function() {
-		alert('ok u hodh');
 		// nderto doren ne varesi te inputit
 		var str_dora = $('input[name="dora"]').val();
 		var arr_dora = str_dora.split(' ');
@@ -74,5 +88,11 @@ $(document).ready(function() {
 		// dergo doren per kontroll ne server
 		socket.emit('vlereso doren', JSON.stringify(dora));
 	});
-
+	$('#pas').click(function() {
+		logo(konsol, null, 'Eee, bona pas!');
+		socket.emit('pas', {});
+	});
+	
+	
+	
 });

@@ -11,6 +11,7 @@ var nr_user = 0;
 const MAX_USER = 4;
 
 function reqHandler(req, res) {
+	if(req.url==='/') req.url = '/index.html';
 	fs.readFile(__dirname + req.url, function(err, data) {
 		if(err) {
 			res.writeHead(500);
@@ -57,9 +58,7 @@ io.sockets.on('connection', function(socket) {
 				ljt : JSON.stringify(loja.ljt, ['emri','poz'])
 			});
 			loja.s_fillo_lojen(nr_user);
-			
 			perditesoKlientet();
-			freskoLetrat(loja.ljt[loja.gjendja.radha]);
 			// merr nje dore per vleresim nga lojtari qe ka radhen
 		}
 		
@@ -71,10 +70,33 @@ io.sockets.on('connection', function(socket) {
 		var dora = new loja.dore(v_dora.nr_letra, v_dora.letrat, 0, loja.ljt[loja.gjendja.radha], -1);
 		if(loja.pranohetDora(dora, loja.gjendja.fusha)) {
 			console.log('Dora u pranua, megjithese nuk eshte implementuar logjika e pranimit');
+			var doli_lojtari = loja.luajDoren(dora, loja.gjendja.fusha);
+			console.log(dora);
+			console.log(loja.gjendja.fusha);
+			io.sockets.emit('pranohet', {
+				hedhesi : dora.hedhesi.emri,
+				letrat  : JSON.stringify(dora.letrat),
+				pas     : false
+			});
+			if(doli_lojtari) io.sockets.emit('doli lojtar', { mesazhi : dora.hedhesi.emri + ' doli'});
+			if(!loja.gjendja.duhet_vazhduar_loja) {	
+				var msg = 'Loja mbaroi';
+				console.log(msg);
+				io.sockets.emit('fund round', { mesazhi : msg });
+			}
+			loja.kaloRadhen();
+			perditesoKlientet();
 		}
 		else {
-			// lajmero lojtarin qe dora eshte e pavlefshme
+			socket.emit('nuk pranohet', {mesazhi : 'Dora nuk pranohet'}); // mesazhi mund te perpunohet per te shpjeguar arsyen
 		}
+	});
+	socket.on('pas', function(data) {
+		console.log('Lojtari beri pas');
+		loja.pas(loja.ljt[loja.gjendja.radha]);
+		io.sockets.emit('pranohet', {pas : true});
+		loja.kaloRadhen();
+		perditesoKlientet();
 	});
 	io.sockets.emit('nr-user', nr_user);
 });
@@ -89,11 +111,11 @@ function perditesoKlientet() {
 		letrat_fushe : JSON.stringify(loja.gjendja.fusha.letrat, ['id', 'vlera', 'lloji', 'kodi', 'ne_loje'])
 	}
 	io.sockets.emit('perditesim', perditesimi);
-	// te dhenat qe duhet ti dije vetem nje lojtari specifik ( letrat e tija psh )
+	for(var i=0;i<4;i++) freskoLetrat(loja.ljt[i]);
 }
 function freskoLetrat(lojtar) { lojtar.socket.emit('fresko letrat', JSON.stringify(lojtar.letrat)); }
 
-app.listen(7777);
-console.log('Server is listening on port 7777');
+app.listen(80);
+console.log('Server is listening on port 80');
 
 })();
