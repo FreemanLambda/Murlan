@@ -1,0 +1,9 @@
+exports = module.exports = {
+    PERPARESI_ZERO: -1,
+    PERPARESI_NORMALE: 0,
+    PERPARESI_BOMBE: 1,
+    PERPARESI_SHKALLE: 2,
+    PERPARESI_MARRJE: 3,
+    MAX_PIKE_PER_RAUND: 3,
+    MAX_PIKE_PER_LOJE: 21
+}

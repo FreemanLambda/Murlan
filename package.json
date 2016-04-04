@@ -1,0 +1,30 @@
+{
+  "name": "murlan",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Your Name <you.name@example.org>",
+  "contributors": [
+    {
+      "name": "Foo Bar",
+      "email": "foo.bar@example.com"
+    }
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "nodejitsu",
+    "example",
+    "browsenpm"
+  ],
+  "dependencies": {
+    "config": "^1.19.0",
+    "express": "^4.13.4",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "should": "^8.3.0"
+  },
+  "license": "MIT"
+}
