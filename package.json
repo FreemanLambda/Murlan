@@ -2,20 +2,20 @@
   "name": "murlan",
   "version": "1.0.0",
   "description": "",
-  "author": "Your Name <you.name@example.org>",
+  "author": "Mario Banushi mariobanushi@hotmail.com",
   "contributors": [
     {
-      "name": "Foo Bar",
-      "email": "foo.bar@example.com"
+      "name": "Mario Banushi",
+      "email": "mariobanushi@hotmail.com"
     }
   ],
   "scripts": {
-    "start": "node index.js"
+    "start": "nodejs index.js"
   },
   "keywords": [
-    "nodejitsu",
-    "example",
-    "browsenpm"
+    "murlan",
+    "multiplayer",
+    "card"
   ],
   "dependencies": {
     "config": "^1.19.0",
@@ -26,5 +26,5 @@
     "mocha": "^2.4.5",
     "should": "^8.3.0"
   },
-  "license": "MIT"
+  "license": "none"
 }
