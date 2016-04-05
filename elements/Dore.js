@@ -1,7 +1,6 @@
-function Dore( pronari, letrat, maxLetra ) {
-	this.pronari = pronari,
-	this.letrat = letrat,
-	this.maxLetra = maxLetra
+function Dore( letrat, pronari ) {
+	this.letrat = letrat;
+	this.pronari = pronari;
 }
 
 Dore.prototype = {
@@ -12,10 +11,10 @@ Dore.prototype = {
 	},
 
 	kaLetrenMeKod: function( kod ) {
-		var kaLetren = this.letrat.filter( function( l ) {
+		var kaLetren = this.letrat.find( function( l ) {
 			return l.kodi === kod;
 		} );
-		if( kaLetren.length ) {
+		if( kaLetren ) {
 			return this.pronari;
 		}
 		else {
@@ -26,7 +25,7 @@ Dore.prototype = {
 	kapLetrenNgaKodi: function( kod ) {
 		return this.letrat.find( function( l ) {
 			return l.kodi === kod;
-		} );
+		} ) || false;
 	},
 
 	kaDyZhola: function() {

@@ -42,13 +42,12 @@ function shperndajLetrat( lojtaret, pozFillim ) {
 	var nrLojtare = lojtaret.length;
 
 	for( var i = 0; i < nrLojtare; i++ ) {
-		duart[ i ] = new Dore( lojtaret[ i ].id, [] );
+		duart[ i ] = new Dore( [], lojtaret[ i ].id );
 	}
 	pako.forEach( function( leter ) {
 		duart[ k++ % nrLojtare ].letrat.push( leter );
 	} );
 	duart.forEach( function( dore ) {
-		dore.maxLetra = dore.letrat.length;
 		dore.rendit();
 	} );
 
@@ -146,7 +145,7 @@ GameEngine.prototype = {
 
 	_shqyrtoHedhjen: function( hedhja ) {
 		// kontrollo nese lojtari qe hodhi doren e ka radhen tani
-		if( hedhja.pronari !== this._radha ) {
+		if( hedhja.hedhesi !== this._radha ) {
 			this.sinjalizuesi.emit( 'refuzo hedhjen', 'Nuk e ke ti radhen.' );
 			return;
 		}
@@ -157,7 +156,7 @@ GameEngine.prototype = {
 		}
 		// kontrollo nese lojtari i ka me te vertete letrat qe deklaroi ne hedhje
 		var doraELojtarit = this._duart.find( function( dore ) {
-			return dore.pronari === hedhja.pronari;
+			return dore.pronari === hedhja.hedhesi;
 		} );
 		var kaGenjeshter = false;
 		hedhja.kodet.forEach( function( kod ) {
@@ -171,7 +170,7 @@ GameEngine.prototype = {
 		}
 		// nderto nje hedhje nisur nga te dhenat
 		var letrat = [], letra;
-		var pronari = hedhja.pronari;
+		var pronari = hedhja.hedhesi;
 		hedhja.kodet.forEach( function( kod ) {
 			letra = doraELojtarit.kapLetrenNgaKodi( kod );
 			if( letra ) {
@@ -217,10 +216,10 @@ GameEngine.prototype = {
 		this._cikelPas = 0;
 		// shiko nese lojtari ka dalur
 		if( doraELojtarit.nrLetra === 0 ) {
-			this.sinjalizuesi.emit(
-				'doli lojtar',
-				{ id: doraELojtarit.pronari, piket: this._piketPerLojtarinQeDel}
-			);
+			this.sinjalizuesi.emit( 'doli lojtar', {
+				id: doraELojtarit.pronari,
+				piket: this._piketPerLojtarinQeDel
+			} );
 			var lojtariIDalur = this._lojtaret.find( function( ljt ) {
 				return ljt.id === hedhja.hedhesi;
 			} );

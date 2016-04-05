@@ -53,10 +53,32 @@ var lojtaret = [
 var stdin = process.openStdin();
 
 // trajtimi i sinjaleve ne dalje te GameEngine
+var Hedhje = require( './elements/Hedhje' );
 ge.sinjalizuesi.on( 'jep radhen', function( data ) {
 	console.log( 'radhen e ka: ' + lojtaret[ data.radha ].emer + ' (' + lojtaret[ data.radha ].id + ')' );
 	console.log( data.fusha.paraqitBukur() );
 	console.log( data.duart[ data.radha ].paraqitBukur() );
+	setTimeout( function() {
+		var i = 0, eThen = false;
+		do {
+			var h = new Hedhje( [ data.duart[ data.radha ].letrat[ i ] ], data.radha );
+			h.llogaritHedhjen();
+			eThen = h.thyenHedhjen( data.fusha );
+			i++;
+		} while( !eThen && i < data.duart[ data.radha ].letrat.length );
+
+		if( eThen ) {
+			ge.sinjalizuesi.emit( 'hidh', {
+				hedhesi: h.hedhesi,
+				kodet: h.letrat.map( function( l ) {
+					return l.kodi;
+				} )
+			} );
+		}
+		else {
+			ge.sinjalizuesi.emit( 'pas', data.radha );
+		}
+	}, 2500 );
 } );
 
 ge.sinjalizuesi.on( 'refuzo hedhjen', function( arsye ) {
@@ -83,21 +105,21 @@ ge.sinjalizuesi.on( 'mbyll lojen', function( data ) {
 } );
 
 // futja e sinjaleve ne hyrje te GameEngine
-stdin.addListener( 'data', function( d ) {
-    var consoleInput = ( d.toString().trim() );
-	var parts = consoleInput.split( ' ' );
-	var hedhja = {
-		pronari: parseInt( parts[ 0 ] ),
-		kodet: parts.splice( 1 )
-	}
-	if( hedhja.kodet[ 0 ] === 'pas' ) {
-		ge.sinjalizuesi.emit( 'pas', hedhja.pronari );
-	}
-	else {
-		ge.sinjalizuesi.emit( 'hidh', hedhja );
-	}
-
-});
+// stdin.addListener( 'data', function( d ) {
+//     var consoleInput = ( d.toString().trim() );
+// 	var parts = consoleInput.split( ' ' );
+// 	var hedhja = {
+// 		hedhesi: parseInt( parts[ 0 ] ),
+// 		kodet: parts.splice( 1 )
+// 	}
+// 	if( hedhja.kodet[ 0 ] === 'pas' ) {
+// 		ge.sinjalizuesi.emit( 'pas', hedhja.pronari );
+// 	}
+// 	else {
+// 		ge.sinjalizuesi.emit( 'hidh', hedhja );
+// 	}
+//
+// });
 
 ge.sinjalizuesi.emit( 'fillo', {
 	lojtaret: lojtaret,

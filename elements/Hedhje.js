@@ -181,4 +181,9 @@ Hedhje.prototype = {
 
 }
 
+function DoreException( error ) {
+	this.errorId = error.errorId;
+	this.msg = error.msg;
+}
+
 exports = module.exports = Hedhje;

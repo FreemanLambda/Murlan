@@ -55,6 +55,9 @@ function trazoPako() {
 	return pako;
 }
 
+// ndertojme nje pako te trazuar per testet
+var pako = trazoPako();
+
 describe( 'Leter', function() {
     it( 'Konstruktori pranon nje id, numer nga 1 ne 54', function() {
         ( function() {
@@ -224,9 +227,6 @@ describe( 'TabelaRadhe', function() {
 } );
 
 describe( 'Hedhje', function() {
-
-    // ndertojme nje pako te trazuar per testet
-    var pako = trazoPako();
 
     describe( 'Funksionet baze', function() {
 
@@ -467,5 +467,44 @@ describe( 'Hedhje', function() {
 } );
 
 describe( 'Dore', function() {
-    
+
+    describe( 'Funksionet baze', function() {
+
+        var dora = new Dore( pako.slice( 13, 26 ), 0 );
+        var letrat1 = [ new Leter( 1 ), new Leter( 2 ), new Leter( 53 ), new Leter( 14 ) ];
+
+        it( '#rendit i rreshton letrat e dores ne rend rrites', function() {
+            dora.rendit();
+            for( var i = 1; i < dora.letrat.length; i++ ) {
+                dora.letrat[ i ].vlera.should.be.above( dora.letrat[ i -1 ].vlera - 1 );
+            }
+        } );
+
+        it( '#kaLetrenMeKod verteton nese letra e dhene eshte pjese e dores', function() {
+            var dora1 = new Dore( letrat1, 2 );
+            dora1.kaLetrenMeKod( 'S3' ).should.be.a.Number;
+            dora1.kaLetrenMeKod( 'S4' ).should.equal( 2 )
+            dora1.kaLetrenMeKod( 'S5' ).should.be.exactly( -1 );
+            dora1.kaLetrenMeKod( 'KZ' ).should.equal( -1 );
+            dora1.kaLetrenMeKod( 'D3' ).should.be.exactly( 2 );
+        } );
+
+        it( '#kapLetrenNgaKodi gjen dhe kthen letren e dores nisur nga kodi', function() {
+            var dora2 = new Dore( letrat1, 1 );
+            dora2.kapLetrenNgaKodi( 'S3' ).should.be.instanceOf( Leter ).and.have.properties( { vlera: 3, lloji: 'Spathi' } );
+            dora2.kapLetrenNgaKodi( 'S4' ).should.be.instanceOf( Leter ).and.have.property( 'id', 2 );
+            dora2.kapLetrenNgaKodi( 'S5' ).should.equal( false );
+            dora2.kapLetrenNgaKodi( 'KZ' ).should.equal( false );
+            dora2.kapLetrenNgaKodi( 'D3' ).should.be.instanceOf( Leter ).and.have.property( 'vlera', 3 );
+        } );
+
+        it( '#kaDyZhola tregon nese dora i ka te dy zholat', function() {
+            var dora3 = new Dore( [ new Leter( 53 ), new Leter( 54 ) ], 0 );
+            dora3.kaDyZhola().should.equal( true );
+            dora3.letrat.splice( 0, 1 );
+            dora3.kaDyZhola().should.equal( false );
+        } );
+
+    } );
+
 } );
