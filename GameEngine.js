@@ -135,10 +135,11 @@ GameEngine.prototype = {
 		else {
 			// normalisht fillon humbesi
 			// nese humbesi ka 2 zhola, fillon fituesi
+			var humbesiId = this._historia.humbesi
 			var doraHumbesit = this._duart.find( function( d ) {
-				return d.pronari === this._historia.humbesi;
+				return d.pronari === humbesiId;
 			} );
-			iPari = ( doraHumbesit.kaDyZhola() ? this._historia.fituesi : this._historia.humbesi );
+			iPari = ( doraHumbesit.kaDyZhola() ? this._historia.fituesi : humbesiId );
 		}
 		return iPari;
 	},
@@ -210,8 +211,6 @@ GameEngine.prototype = {
 			return !hedhja.kaLetrenMeKod( l.kodi );
 		} );
 		doraELojtarit.nrLetra = doraELojtarit.letrat.length;
-		// kalo radhen te lojtari pasardhes
-		this._kaloRadhen();
 		// kthe ne 0 ciklin e paseve
 		this._cikelPas = 0;
 		// shiko nese lojtari ka dalur
@@ -237,8 +236,13 @@ GameEngine.prototype = {
 			} );
 			if( teNgelur.length <= 1 ) {
 				this._mbyllRaundin();
+				// mos lejo kalimin e radhes perderisa po mbaron raundi
+				return;
 			}
 		}
+
+		// kalo radhen te lojtari pasardhes
+		this._kaloRadhen();
 
 	},
 
@@ -304,7 +308,7 @@ GameEngine.prototype = {
 			fitimtaretELojes.sort( function( ljt1, ljt2 ) {
 				return ljt2.piketTotal - ljt1.piketTotal;
 			} );
-			duhetMbyllurLoja  = ( fitimtaretELojes[ 0 ].piketTotal === fitimtaretELojes[ 1 ].piketTotal );
+			duhetMbyllurLoja  = ( fitimtaretELojes[ 0 ].piketTotal !== fitimtaretELojes[ 1 ].piketTotal );
 		}
 		if( duhetMbyllurLoja ) {
 			this._mbyllLojen();
@@ -317,8 +321,8 @@ GameEngine.prototype = {
 	},
 
 	_mbyllLojen: function() {
-		this.sinjalizuesi.emit( 'mbybll lojen', {
-			rendijta: this._lojtaret.sort( function( ljt2, ljt1 ) {
+		this.sinjalizuesi.emit( 'mbyll lojen', {
+			renditja: this._lojtaret.sort( function( ljt2, ljt1 ) {
 				return ljt1.piketTotal - ljt2.piketTotal;
 			} )
 		} );

@@ -37,8 +37,8 @@ Dore.prototype = {
 			return l1.vlera - l2.vlera;
 		} ).map( function( l ) {
 			return l.kodi;
-		} ).join( ' ' );
-		return paraqitja || 'Bosh';
+		} ).join( ' ' ) || 'Bosh';
+		return 'Pronari: (' + this.pronari + ') - Letrat: ' + paraqitja ;
 	}
 }
 

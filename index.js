@@ -50,35 +50,54 @@ var lojtaret = [
 	new Lojtar( 3, 'Miri', 3 )
 ];
 
+function kapLojtarNgaRadha( radha ) {
+	return lojtaret.find( function( ljt ) {
+		return ljt.id === radha;
+	} );
+}
+
 var stdin = process.openStdin();
 
 // trajtimi i sinjaleve ne dalje te GameEngine
 var Hedhje = require( './elements/Hedhje' );
 ge.sinjalizuesi.on( 'jep radhen', function( data ) {
-	console.log( 'radhen e ka: ' + lojtaret[ data.radha ].emer + ' (' + lojtaret[ data.radha ].id + ')' );
-	console.log( data.fusha.paraqitBukur() );
-	console.log( data.duart[ data.radha ].paraqitBukur() );
+	var ljt = kapLojtarNgaRadha( data.radha );
+	var doraLjt = data.duart.find( function( d ) {
+		return d.pronari === data.radha;
+	} );
+	//console.log( 'radhen e ka: ' + ljt.emer + ' (' + ljt.id + ')' );
+	//console.log( data.fusha.paraqitBukur() );
+	//console.log( doraLjt.paraqitBukur() );
 	setTimeout( function() {
-		var i = 0, eThen = false;
-		do {
-			var h = new Hedhje( [ data.duart[ data.radha ].letrat[ i ] ], data.radha );
-			h.llogaritHedhjen();
-			eThen = h.thyenHedhjen( data.fusha );
-			i++;
-		} while( !eThen && i < data.duart[ data.radha ].letrat.length );
+		var i = 0, eThen = false, h, m3 = doraLjt.kapLetrenNgaKodi( 'M3' );
+		if( !ge._raundi && m3 ) {
+			h = new Hedhje( [ m3 ], data.radha );
+			eThen = true;
+		}
+		else {
+			do {
+				h = new Hedhje( [ doraLjt.letrat[ i ] ], data.radha );
+				h.llogaritHedhjen();
+				eThen = h.thyenHedhjen( data.fusha );
+				i++;
+			} while( !eThen && i < doraLjt.letrat.length );
+		}
 
 		if( eThen ) {
+			var kodet = h.letrat.map( function( l ) {
+				return l.kodi;
+			} );
+			//console.log( ljt.emer + ' hodhi ' + kodet[ 0 ] );
 			ge.sinjalizuesi.emit( 'hidh', {
 				hedhesi: h.hedhesi,
-				kodet: h.letrat.map( function( l ) {
-					return l.kodi;
-				} )
+				kodet: kodet
 			} );
 		}
 		else {
+			//console.log( ljt.emer + ' beri pas' );
 			ge.sinjalizuesi.emit( 'pas', data.radha );
 		}
-	}, 2500 );
+	}, 1 );
 } );
 
 ge.sinjalizuesi.on( 'refuzo hedhjen', function( arsye ) {
@@ -86,22 +105,35 @@ ge.sinjalizuesi.on( 'refuzo hedhjen', function( arsye ) {
 } );
 
 ge.sinjalizuesi.on( 'doli lojtar', function( data ) {
-	console.log( 'doli lojtari: ' + lojtaret[ data.id ].emer );
-	console.log( 'fitoi ' + data.piket + ' pike' );
+	//console.log( 'doli lojtari: ' + lojtaret[ data.id ].emer );
+	//console.log( 'fitoi ' + data.piket + ' pike' );
 } );
 
 ge.sinjalizuesi.on( 'shpall raundin', function( data ) {
-	console.log( 'Raundi mbaroi' );
-	console.log( 'Piket e raundit: ' );
-	console.log( data.piket );
-	console.log( 'Renditja e pergjithshme:' );
-	console.log( data.renditja );
-	console.log( 'Raundin tjeter (' + data.historia.humbesi + ') do i jape leter (' + data.historia.fituesi + ')' );
+	// console.log( 'Raundi mbaroi' );
+	// console.log( 'Piket e raundit: ' );
+	// console.log( data.piket );
+	// console.log( 'Renditja e pergjithshme:' );
+	// console.log( data.renditja );
+	// console.log( 'Raundin tjeter (' + data.historia.humbesi + ') do i jape leter (' + data.historia.fituesi + ')' );
 } );
 
+var lojraGjithsej = 0;
 ge.sinjalizuesi.on( 'mbyll lojen', function( data ) {
+	lojraGjithsej++;
+	if( lojraGjithsej > 99 ) {
+		console.log('boll mo!');
+		return;
+	}
 	console.log( 'Loja mbaroi! Renditja perfundimtare:' );
 	console.log( data.renditja );
+	lojtaret.forEach( function( ljt ) {
+		ljt.piketTotal = 0;
+	} );
+	ge.sinjalizuesi.emit( 'fillo', {
+		lojtaret: lojtaret,
+		rregullat: {}
+	} );
 } );
 
 // futja e sinjaleve ne hyrje te GameEngine
