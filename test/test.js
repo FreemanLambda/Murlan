@@ -1,11 +1,12 @@
+/* eslint-disable */
 var should = require( 'should' )
-    , Konstante = require( '../elements/Konstante' )
-    , Lojtar = require( '../elements/Lojtar' )
-    , Leter = require( '../elements/Leter' )
-    , TabeleRadhe = require( '../elements/TabeleRadhe' )
-    , Hedhje = require( '../elements/Hedhje' )
-    , Dore = require( '../elements/Dore' )
-    , GameEngine = require( '../GameEngine' );
+    , Konstante = require( '../lib/elements/Konstante' ).default
+    , Lojtar = require( '../lib/elements/Lojtar' ).default
+    , Leter = require( '../lib/elements/Leter' ).default
+    , TabeleRadhe = require( '../lib/elements/TabeleRadhe' ).default
+    , Hedhje = require( '../lib/elements/Hedhje' ).default
+    , Dore = require( '../lib/elements/Dore' ).default
+    , GameEngine = require( '../lib/GameEngine' ).default;
 
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
